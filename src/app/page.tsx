@@ -55,60 +55,133 @@ export default function Home() {
   return (
     <>
       <JsonLd data={structuredData} />
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-yellow-50 to-gray-100 dark:from-black dark:to-zinc-900 px-4 py-12">
-        <section className="max-w-2xl w-full text-center">
-          {/* Hero Image */}
-          <div className="mb-8">
-            <div className="w-32 h-32 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-6xl text-white font-bold shadow-lg">
-              ₿
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative px-4 py-16 md:py-24">
+          <div className="max-w-6xl mx-auto text-center">
+            <div className="mb-8">
+              <div className="w-24 h-24 mx-auto icon-gradient mb-6">
+                <span className="text-4xl font-bold text-white">₿</span>
+              </div>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="gradient-text">Bitcoin FAQ</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Your comprehensive guide to Bitcoin. Get expert answers, secure your crypto, and start earning today.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <a href="https://shop.ledger.com/?r=4dd6902856a9" target="_blank" rel="nofollow" className="btn-primary text-lg px-8 py-4">
+                Secure Your Bitcoin
+              </a>
+              <a href="/blog" className="btn-secondary text-lg px-8 py-4">
+                Learn More
+              </a>
             </div>
           </div>
-          
-          <h1 className="text-4xl font-bold text-yellow-700 dark:text-yellow-400 mb-4">Bitcoin FAQ</h1>
-          <p className="text-lg text-gray-700 dark:text-zinc-300 mb-8">
-            The most common Bitcoin questions answered by crypto natives. Start your journey, learn the basics, and discover ways to earn with Bitcoin.
-          </p>
-          <div className="grid gap-6 text-left">
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-zinc-700">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">₿</div>
-                <div>
-                  <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300 mb-2">What is Bitcoin?</h2>
-                  <p className="text-gray-700 dark:text-zinc-300">Bitcoin is a decentralized digital currency that enables peer-to-peer transactions without intermediaries. It's secured by blockchain technology and is the most recognized cryptocurrency worldwide.</p>
+        </section>
+
+        {/* FAQ Cards Section */}
+        <section className="px-4 py-16">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+              <span className="gradient-text">Common Questions</span>
+            </h2>
+            <p className="text-xl text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+              Everything you need to know about Bitcoin, explained simply
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-8 text-left">
+              <div className="glass-card card-hover p-8">
+                <div className="flex items-start gap-6">
+                  <div className="w-14 h-14 icon-gradient flex-shrink-0">
+                    <span className="text-2xl font-bold text-white">₿</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">What is Bitcoin?</h3>
+                    <p className="text-gray-300 leading-relaxed">Bitcoin is a decentralized digital currency that enables peer-to-peer transactions without intermediaries. It's secured by blockchain technology and is the most recognized cryptocurrency worldwide.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300">How do I buy Bitcoin?</h2>
-              <p className="text-gray-800 dark:text-zinc-200">You can buy Bitcoin using trusted exchanges. <a href="https://affiliate-exchange.com/signup" className="text-blue-600 underline font-medium" rel="nofollow" target="_blank">Sign up here</a> to get started and earn bonuses.</p>
-            </div>
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-zinc-700">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">🔒</div>
-                <div>
-                  <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300 mb-2">How do I keep Bitcoin safe?</h2>
-                  <p className="text-gray-700 dark:text-zinc-300">Store your Bitcoin in a secure wallet. The <strong>Ledger Nano X</strong> is the gold standard for hardware wallets - trusted by millions worldwide with bank-grade security. <a href="https://shop.ledger.com/?r=4dd6902856a9" className="text-blue-600 hover:text-blue-800 underline font-medium" rel="nofollow" target="_blank">Get your Ledger wallet here</a>.</p>
+
+              <div className="glass-card card-hover p-8">
+                <div className="flex items-start gap-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl font-bold text-white">💱</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">How do I buy Bitcoin?</h3>
+                    <p className="text-gray-300 leading-relaxed">You can buy Bitcoin using trusted exchanges. <a href="https://affiliate-exchange.com/signup" className="text-link" rel="nofollow" target="_blank">Sign up here</a> to get started and earn bonuses.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow-sm border border-gray-100 dark:border-zinc-700">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">💰</div>
-                <div>
-                  <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300 mb-2">Can I earn Bitcoin?</h2>
-                  <p className="text-gray-700 dark:text-zinc-300">Yes! Earn Bitcoin by joining affiliate programs, mining, or providing services. <a href="https://affiliate-earn.com" className="text-blue-600 hover:text-blue-800 underline font-medium" rel="nofollow" target="_blank">Discover earning opportunities</a>.</p>
+
+              <div className="glass-card card-hover p-8">
+                <div className="flex items-start gap-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl font-bold text-white">🔒</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">How do I keep Bitcoin safe?</h3>
+                    <p className="text-gray-300 leading-relaxed">Store your Bitcoin in a secure wallet. The <strong className="text-white">Ledger Nano X</strong> is the gold standard - trusted by millions worldwide with bank-grade security. <a href="https://shop.ledger.com/?r=4dd6902856a9" className="text-link" rel="nofollow" target="_blank">Get your Ledger wallet here</a>.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="bg-yellow-100 dark:bg-zinc-800 rounded-lg p-6 mt-6 shadow">
-              <h2 className="text-xl font-bold text-yellow-900 dark:text-yellow-200 mb-2">Bitcoin Tax Calculation Made Easy</h2>
-              <p className="text-gray-900 dark:text-zinc-100 mb-4">Tax season doesn’t have to be stressful. Track your Bitcoin transactions and calculate your crypto taxes automatically with <span className="font-semibold">Koinly</span>. Save time, avoid mistakes, and stay compliant.</p>
-              <a href="https://koinly.io/?via=0DA91C48&utm_source=affiliate" target="_blank" rel="nofollow" className="inline-block bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow hover:bg-blue-800 transition">Try Koinly for Free</a>
+
+              <div className="glass-card card-hover p-8">
+                <div className="flex items-start gap-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl font-bold text-white">💰</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Can I earn Bitcoin?</h3>
+                    <p className="text-gray-300 leading-relaxed">Yes! Earn Bitcoin by joining affiliate programs, mining, or providing services. <a href="https://affiliate-earn.com" className="text-link" rel="nofollow" target="_blank">Discover earning opportunities</a>.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-center gap-4">
-            <a href="https://affiliate-exchange.com/signup" className="inline-block bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-yellow-700 transition">Sign Up & Buy Bitcoin</a>
-            <a href="https://koinly.io/?via=0DA91C48&utm_source=affiliate" target="_blank" rel="nofollow" className="inline-block bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-800 transition">Calculate Your Bitcoin Taxes with Koinly</a>
+        </section>
+
+        {/* Featured Section - Koinly */}
+        <section className="px-4 py-16">
+          <div className="max-w-4xl mx-auto">
+            <div className="glass-card p-8 md:p-12 text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl font-bold text-white">📊</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Bitcoin Tax Calculation Made Easy
+              </h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Tax season doesn't have to be stressful. Track your Bitcoin transactions and calculate your crypto taxes automatically with <strong className="text-white">Koinly</strong>. Save time, avoid mistakes, and stay compliant.
+              </p>
+              <a href="https://koinly.io/?via=0DA91C48&utm_source=affiliate" target="_blank" rel="nofollow" className="btn-primary text-lg px-8 py-4">
+                Try Koinly for Free
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="gradient-text">Ready to Start Your Bitcoin Journey?</span>
+            </h2>
+            <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+              Get the tools and knowledge you need to succeed in the world of Bitcoin
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <a href="https://shop.ledger.com/?r=4dd6902856a9" target="_blank" rel="nofollow" className="btn-primary text-lg px-8 py-4">
+                Secure Your Bitcoin with Ledger
+              </a>
+              <a href="https://koinly.io/?via=0DA91C48&utm_source=affiliate" target="_blank" rel="nofollow" className="btn-secondary text-lg px-8 py-4">
+                Calculate Your Bitcoin Taxes
+              </a>
+            </div>
           </div>
         </section>
       </main>

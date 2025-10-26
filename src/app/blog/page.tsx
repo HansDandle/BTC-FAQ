@@ -16,32 +16,65 @@ export default function BlogPage() {
   const posts = getAllBlogPosts();
 
   return (
-      <main className="max-w-2xl mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-yellow-700 dark:text-yellow-400">Bitcoin Blog</h1>
-        <div className="space-y-8">
+    <main className="min-h-screen pt-8">
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <span className="gradient-text">Bitcoin Blog</span>
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Stay updated with the latest Bitcoin insights, guides, and expert analysis
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <article key={post.slug} className="border-b border-gray-200 dark:border-gray-700 pb-6">
-              <Link href={`/blog/${post.slug}`} className="block hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-4 -m-4 transition-colors">
-                <h2 className="text-xl font-semibold mb-2 text-yellow-800 dark:text-yellow-300 hover:text-yellow-600 dark:hover:text-yellow-200">
-                  {post.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-3">
-                  {post.description}
-                </p>
-                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                  <span>{new Date(post.date).toLocaleDateString()}</span>
-                  <div className="flex gap-2">
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded text-xs">
-                        {tag}
-                      </span>
-                    ))}
+            <article key={post.slug} className="glass-card card-hover overflow-hidden">
+              <Link href={`/blog/${post.slug}`} className="block p-8 h-full">
+                <div className="flex flex-col h-full">
+                  <h2 className="text-2xl font-bold text-white mb-4 leading-tight hover:text-blue-300 transition-colors">
+                    {post.title}
+                  </h2>
+                  <p className="text-gray-300 mb-6 flex-grow leading-relaxed">
+                    {post.description}
+                  </p>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">
+                      {new Date(post.date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </span>
+                    <div className="flex gap-2">
+                      {post.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </Link>
             </article>
           ))}
         </div>
-      </main>
+
+        {/* CTA Section */}
+        <div className="mt-20 text-center">
+          <div className="glass-card p-8 md:p-12 max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to Secure Your Bitcoin?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Don't keep your Bitcoin on exchanges. Get the world's most trusted hardware wallet.
+            </p>
+            <a href="https://shop.ledger.com/?r=4dd6902856a9" target="_blank" rel="nofollow" className="btn-primary text-lg px-8 py-4">
+              Get Your Ledger Wallet
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
