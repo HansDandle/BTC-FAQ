@@ -21,7 +21,7 @@ export default function FAQPage() {
           </li>
           <li>
             <h2 className="text-xl font-semibold">What is the best wallet for Bitcoin?</h2>
-            <p>Hardware wallets like Ledger and Trezor are recommended for security. <a href="https://affiliate-wallet.com" target="_blank" rel="nofollow" className="text-blue-600 underline font-medium">Get a hardware wallet</a>.</p>
+            <p>The <strong>Ledger Nano X</strong> is widely considered the best Bitcoin hardware wallet. It offers unparalleled security with a Secure Element chip, supports over 5,500 cryptocurrencies, and has a user-friendly mobile app via Bluetooth. <a href="https://shop.ledger.com/?r=4dd6902856a9" target="_blank" rel="nofollow" className="text-blue-600 underline font-medium">Get your Ledger Nano X here</a>.</p>
           </li>
           <li>
             <h2 className="text-xl font-semibold">Where can I buy Bitcoin?</h2>

@@ -1,7 +1,16 @@
 import { MetadataRoute } from 'next'
+import { getAllBlogPosts } from '@/lib/blog'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://btc-faq.com' // Replace with your actual domain
+  const blogPosts = getAllBlogPosts()
+  
+  const blogUrls = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
   
   return [
     {
@@ -22,5 +31,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.8,
     },
+    ...blogUrls,
   ]
 }

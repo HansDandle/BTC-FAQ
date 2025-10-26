@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { getAllBlogPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Bitcoin Blog - Latest News and Guides",
@@ -11,21 +13,35 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
+  const posts = getAllBlogPosts();
+
   return (
       <main className="max-w-2xl mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold mb-6 text-yellow-700 dark:text-yellow-400">Bitcoin Blog</h1>
-        <article className="mb-8">
-          <h2 className="text-xl font-semibold mb-2">How to Calculate Your Bitcoin Taxes with Koinly</h2>
-          <p className="mb-2">Tax season can be overwhelming for crypto users. Koinly makes it easy to track your Bitcoin transactions and generate tax reports. <a href="https://koinly.io/?via=0DA91C48&utm_source=affiliate" target="_blank" rel="nofollow" className="text-blue-600 underline font-medium">Try Koinly now</a>.</p>
-        </article>
-        <article className="mb-8">
-          <h2 className="text-xl font-semibold mb-2">Top 5 Ways to Earn Bitcoin in 2025</h2>
-          <p className="mb-2">From affiliate programs to mining, discover the best strategies to earn Bitcoin this year. <a href="https://affiliate-earn.com" target="_blank" rel="nofollow" className="text-blue-600 underline font-medium">Start earning</a>.</p>
-        </article>
-        <article>
-          <h2 className="text-xl font-semibold mb-2">Best Bitcoin Wallets for Security</h2>
-          <p className="mb-2">Protect your Bitcoin with a hardware wallet. <a href="https://affiliate-wallet.com" target="_blank" rel="nofollow" className="text-blue-600 underline font-medium">Get yours here</a>.</p>
-        </article>
+        <div className="space-y-8">
+          {posts.map((post) => (
+            <article key={post.slug} className="border-b border-gray-200 dark:border-gray-700 pb-6">
+              <Link href={`/blog/${post.slug}`} className="block hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-4 -m-4 transition-colors">
+                <h2 className="text-xl font-semibold mb-2 text-yellow-800 dark:text-yellow-300 hover:text-yellow-600 dark:hover:text-yellow-200">
+                  {post.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-3">
+                  {post.description}
+                </p>
+                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <span>{new Date(post.date).toLocaleDateString()}</span>
+                  <div className="flex gap-2">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <span key={tag} className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </article>
+          ))}
+        </div>
       </main>
   );
 }
