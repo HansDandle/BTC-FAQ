@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-blog": "node scripts/generate-blog-post.js",
+    "test-blog": "node scripts/test-generation.js"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
     "next": "16.0.0",
+    "openai": "^4.0.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
