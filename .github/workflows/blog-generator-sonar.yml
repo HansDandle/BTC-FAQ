@@ -1,5 +1,8 @@
 name: Generate Blog Articles (Perplexity Sonar Pro)
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 9 * * 1,4' # Mon & Thu 09:00 UTC
@@ -38,7 +41,16 @@ jobs:
         run: |
           python scripts/generate_article.py "Generate a 1200-1600 word, SEO-friendly Bitcoin explainer focused on how macroeconomic policy (interest rates, inflation) is impacting BTC price action and long-term adoption. Include actionable insights for investors and mention Ledger for secure custody. Output in Markdown."
 
+      - name: Upload generated articles artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-articles
+          path: src/content/blog/*.md
+
       - name: Commit and push generated articles
+        env:
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "AI Bitcoin Analyst"
@@ -47,5 +59,12 @@ jobs:
             echo "No new articles to publish"
           else
             git commit -m "Add weekly AI-generated articles - $(date +%Y-%m-%d)" || true
-            git push
+            if [ -n "${PERSONAL_ACCESS_TOKEN}" ]; then
+              echo "Pushing with PERSONAL_ACCESS_TOKEN"
+              git remote set-url origin https://x-access-token:${PERSONAL_ACCESS_TOKEN}@github.com/HansDandle/BTC-FAQ.git
+              git push origin main
+            else
+              echo "Pushing with default credentials (GITHUB_TOKEN)"
+              git push
+            fi
           fi
