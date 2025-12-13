@@ -168,6 +168,37 @@ Make it feel like breaking news analysis that readers can't get anywhere else. F
 
   let completion = null;
   let tried = [];
+  // If PERPLEXITY_API_KEY is provided, prefer Perplexity as primary provider
+  const perplexityKey = process.env.PERPLEXITY_API_KEY;
+  if (perplexityKey) {
+    // Try Perplexity first
+    try {
+      console.log('Attempting Perplexity as primary provider');
+      const pResp = await fetch('https://api.perplexity.ai/v1/answers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${perplexityKey}`
+        },
+        body: JSON.stringify({
+          query: prompt,
+          topk: 1
+        })
+      });
+      if (pResp.ok) {
+        const pJson = await pResp.json();
+        // tolerant parsing: try common fields
+        const pText = pJson?.answer || pJson?.answers?.[0]?.text || pJson?.text || JSON.stringify(pJson);
+        completion = { choices: [{ message: { content: pText } }] };
+        console.log('Perplexity returned content');
+      } else {
+        console.warn('Perplexity request failed:', pResp.status, await pResp.text().catch(() => '')); 
+      }
+    } catch (err) {
+      console.warn('Perplexity call errored:', err?.message || err);
+    }
+  }
+
   for (const modelName of preferred) {
     if (!modelName || tried.includes(modelName)) continue;
     tried.push(modelName);
