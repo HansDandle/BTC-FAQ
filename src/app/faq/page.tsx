@@ -28,16 +28,16 @@ export default function FAQPage() {
     },
     {
       question: "Where can I buy Bitcoin?",
-      answer: "Sign up at a trusted exchange to buy Bitcoin safely and securely.",
-      link: "https://affiliate-exchange.com/signup",
-      linkText: "Buy Bitcoin here",
+      answer: "Sign up at a trusted exchange to buy Bitcoin safely and securely. We cover what to look for and how to protect your purchase.",
+      link: "/blog/buy-bitcoin-guide",
+      linkText: "Read our buying guide",
       icon: "💱"
     },
     {
       question: "How do I earn Bitcoin?",
       answer: "Earn Bitcoin by joining affiliate programs, mining, or providing services.",
-      link: "https://affiliate-earn.com",
-      linkText: "Learn more",
+      link: "/blog/earn-bitcoin-2024",
+      linkText: "See the top 5 ways to earn",
       icon: "💰"
     }
   ];
