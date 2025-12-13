@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "generate-blog": "node scripts/generate-blog-post.js",
-    "test-blog": "node scripts/test-generation.js"
+    "test-blog": "node scripts/test-generation.js",
+    "validate-posts": "node scripts/validate_blog_posts.js"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

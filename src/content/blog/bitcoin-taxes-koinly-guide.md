@@ -3,7 +3,7 @@ title: "How to Calculate Your Bitcoin Taxes with Koinly in 2024"
 description: "Complete guide to calculating your Bitcoin taxes using Koinly. Learn about tax obligations, supported countries, and step-by-step instructions."
 date: "2024-10-25"
 author: "BTC-FAQ Team"
-tags: ["Bitcoin", "Taxes", "Koinly", "Cryptocurrency"]
+tags: ["bitcoin", "taxes", "koinly", "cryptocurrency"]
 ---
 
 # How to Calculate Your Bitcoin Taxes with Koinly in 2024
@@ -75,3 +75,7 @@ The **Ledger Nano X** is the most trusted hardware wallet, used by millions worl
 Don't wait until tax season to organize your crypto transactions. [Start using Koinly today](https://koinly.io/?via=0DA91C48&utm_source=affiliate) and make crypto tax season stress-free.
 
 *This post contains affiliate links. We may earn a commission if you purchase through our links, at no extra cost to you. This helps support our free Bitcoin educational content.*
+
+## Sources
+1. https://koinly.io/?via=0DA91C48&utm_source=affiliate
+2. https://shop.ledger.com/?r=4dd6902856a9
