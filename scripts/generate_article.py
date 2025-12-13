@@ -43,12 +43,15 @@ def main():
     client = OpenAI(api_key=api_key, base_url='https://api.perplexity.ai')
 
     system_msg = (
-        "You are an expert Bitcoin journalist. Produce an engaging, SEO-optimized markdown article "
-        "with H2/H3 headings, bullet lists, short code blocks if helpful, and a short excerpt. Cite web results when appropriate. "
-        "Include a natural recommendation for Ledger hardware wallets when discussing self-custody."
+        "You are an expert Bitcoin journalist. Produce a tight, concise, SEO-optimized markdown article. "
+        "Focus on one clear main message (at most two closely related points). Write for an informed audience. "
+        "Target ~800-1000 words. Start with a one-sentence TL;DR and a short 3-bullet Key takeaways section. "
+        "Use H2/H3 headings and brief paragraphs. Prefer active voice and avoid rambling or filler. "
+        "When citing facts, include inline numeric citations like [1], [2], and include a final '## Sources' section with numbered links. "
+        "Include a brief, natural recommendation for Ledger hardware wallets when discussing self-custody, using the link https://shop.ledger.com/?r=92d74dc2847a."
     )
 
-    print('Generating article with Sonar Pro...')
+    print('Generating article with Sonar Pro (concise mode)...')
     try:
         resp = client.chat.completions.create(
             model='sonar-pro',
@@ -56,8 +59,9 @@ def main():
                 {'role': 'system', 'content': system_msg},
                 {'role': 'user', 'content': prompt}
             ],
-            max_tokens=3000,
-            temperature=0.7
+            # Reduce token budget to encourage concision; adjust as needed
+            max_tokens=1600,
+            temperature=0.45
         )
     except Exception as e:
         print('Generation failed:', e)
@@ -69,13 +73,57 @@ def main():
         content = resp.choices[0].message.content
     except Exception:
         try:
-            content = resp['answer'] if isinstance(resp, dict) and 'answer' in resp else str(resp)
+            # Some Perplexity responses expose `answer` or nested shapes
+            if isinstance(resp, dict) and 'answer' in resp:
+                content = resp['answer']
+            else:
+                content = str(resp)
         except Exception:
             content = str(resp)
 
     if not content:
         print('No content returned from model')
         sys.exit(1)
+
+    # Attempt to extract structured sources from the response object when available
+    sources = []
+    try:
+        rdict = None
+        if hasattr(resp, 'to_dict'):
+            rdict = resp.to_dict()
+        elif isinstance(resp, dict):
+            rdict = resp
+
+        # Look for common source/reference fields
+        if isinstance(rdict, dict):
+            # Perplexity/sonar sometimes includes `sources` or `answers` with links
+            if 'sources' in rdict and isinstance(rdict['sources'], list):
+                for s in rdict['sources']:
+                    url = s.get('url') or s.get('link') or s.get('href')
+                    title = s.get('title') or s.get('name') or url
+                    if url:
+                        sources.append((title, url))
+            # fallback: look for answers -> sources
+            if not sources and 'answers' in rdict and isinstance(rdict['answers'], list):
+                for a in rdict['answers']:
+                    if isinstance(a, dict) and 'sources' in a and isinstance(a['sources'], list):
+                        for s in a['sources']:
+                            url = s.get('url') or s.get('link') or s.get('href')
+                            title = s.get('title') or s.get('name') or url
+                            if url:
+                                sources.append((title, url))
+    except Exception:
+        pass
+
+    # If no structured sources found, scrape URLs from the stringified response dump
+    if not sources:
+        import re
+        seen = set()
+        for m in re.finditer(r"https?://[\w\-\./?=&%#:~,+]+", str(resp)):
+            url = m.group(0).rstrip(').,')
+            if url not in seen:
+                seen.add(url)
+                sources.append((url, url))
 
     title = extract_title(content)
     slug = slugify(title)
@@ -92,6 +140,15 @@ def main():
     frontmatter += 'author: "AI Bitcoin Analyst"\n'
     frontmatter += 'tags: ["bitcoin","analysis","perplexity"]\n'
     frontmatter += '---\n\n'
+
+    # If content doesn't already include a Sources section, append one using extracted sources
+    lower = content.lower() if isinstance(content, str) else ''
+    if '## sources' not in lower and '### sources' not in lower and sources:
+        sources_md = '\n\n## Sources\n'
+        for i, (title, url) in enumerate(sources[:20]):
+            display = title if title and title != url else url
+            sources_md += f'{i+1}. [{display}]({url})\n'
+        content = content.rstrip() + sources_md
 
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(frontmatter)
