@@ -53,6 +53,21 @@ jobs:
           COINMARKETCAP_API_KEY: ${{ secrets.COINMARKETCAP_API_KEY }}
         run: node scripts/generate-current-blog.js
 
+      - name: "Post-generation debug: show blog files + git status"
+        run: |
+          echo '--- repo root ---'
+          pwd
+          echo '--- list blog folder ---'
+          ls -la src/content/blog || true
+          echo '--- git status ---'
+          git status --porcelain=2 --branch || true
+          echo '--- git config user ---'
+          git config --list || true
+          echo '--- staged files (before add) ---'
+          git diff --name-only --staged || true
+          echo '--- show untracked files ---'
+          git ls-files --others --exclude-standard || true
+
       - name: Commit and push fresh Bitcoin analysis
         run: |
           git config --local user.email "action@github.com"
