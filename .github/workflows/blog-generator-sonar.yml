@@ -33,7 +33,7 @@ jobs:
         env:
           PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
         run: |
-          python scripts/generate_article.py "Generate a 1500-1800 word, SEO-optimized, authoritative blog article about the latest Bitcoin market dynamics: regulatory changes, ETF flows, institutional adoption, and practical security tips. Include a natural recommendation for Ledger hardware wallets with the affiliate link https://shop.ledger.com/?r=92d74dc2847a. Output in Markdown with headings, lists, and an excerpt."
+          python scripts/generate_article.py "Write about the latest Bitcoin and cryptocurrency market dynamics this week: regulatory developments, ETF inflows/outflows, institutional adoption news, and practical self-custody tips."
 
       - name: Upload generated articles artifact
         if: always()
