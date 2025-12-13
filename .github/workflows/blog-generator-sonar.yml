@@ -1,0 +1,51 @@
+name: Generate Blog Articles (Perplexity Sonar Pro)
+
+on:
+  schedule:
+    - cron: '0 9 * * 1,4' # Mon & Thu 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  generate-articles:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai requests
+
+      - name: Generate Article 1 (Sonar Pro)
+        env:
+          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+        run: |
+          python scripts/generate_article.py "Generate a 1500-1800 word, SEO-optimized, authoritative blog article about the latest Bitcoin market dynamics: regulatory changes, ETF flows, institutional adoption, and practical security tips. Include a natural recommendation for Ledger hardware wallets with the affiliate link https://shop.ledger.com/?r=92d74dc2847a. Output in Markdown with headings, lists, and an excerpt."
+
+      - name: Generate Article 2 (Sonar Pro)
+        env:
+          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+        run: |
+          python scripts/generate_article.py "Generate a 1200-1600 word, SEO-friendly Bitcoin explainer focused on how macroeconomic policy (interest rates, inflation) is impacting BTC price action and long-term adoption. Include actionable insights for investors and mention Ledger for secure custody. Output in Markdown."
+
+      - name: Commit and push generated articles
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Bitcoin Analyst"
+          git add src/content/blog/*.md || true
+          if git diff --staged --quiet; then
+            echo "No new articles to publish"
+          else
+            git commit -m "Add weekly AI-generated articles - $(date +%Y-%m-%d)" || true
+            git push
+          fi
