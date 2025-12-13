@@ -33,7 +33,7 @@ jobs:
         env:
           PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
         run: |
-          python scripts/generate_article.py "Write about the latest Bitcoin and cryptocurrency market dynamics this week: regulatory developments, ETF inflows/outflows, institutional adoption news, and practical self-custody tips."
+          python scripts/generate_article.py "This week in Bitcoin: cover the most important regulatory news, ETF flow data, institutional adoption updates, and include practical self-custody advice for readers."
 
       - name: Upload generated articles artifact
         if: always()

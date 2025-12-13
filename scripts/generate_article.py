@@ -64,12 +64,33 @@ def extract_tags(text, n=5):
 
 
 def extract_title(markdown_text):
-    m = re.search(r'^#\s*(.+)$', markdown_text, flags=re.MULTILINE)
-    if m:
-        return m.group(1).strip()
-    # fallback: first line or generate
-    first = markdown_text.split('\n', 1)[0].strip()
-    return first[:60] if first else 'Bitcoin Article'
+    """Extract the article title from markdown. Skip generic headings."""
+    # List of headings that are NOT valid titles
+    skip_patterns = [
+        r'^(tl;?dr|key\s*takeaways?|excerpt|summary|introduction|sources|references|what\s*to\s*do)',
+    ]
+    skip_regex = re.compile('|'.join(skip_patterns), re.IGNORECASE)
+    
+    # Find all top-level headings
+    for m in re.finditer(r'^#\s+(.+)$', markdown_text, flags=re.MULTILINE):
+        candidate = m.group(1).strip()
+        # Skip if it matches a generic heading
+        if skip_regex.search(candidate):
+            continue
+        # Valid title found
+        if len(candidate) >= 10:
+            return candidate
+    
+    # Fallback: first non-empty line that looks like a title
+    for line in markdown_text.split('\n'):
+        line = line.strip()
+        if line and not line.startswith('*') and not line.startswith('-') and not line.startswith('#'):
+            clean = re.sub(r'\*+', '', line).strip()
+            if len(clean) >= 10 and not skip_regex.search(clean):
+                return clean[:80]
+    
+    # Last resort
+    return 'Bitcoin Market Analysis'
 
 
 def main():
@@ -85,17 +106,46 @@ def main():
 
     client = OpenAI(api_key=api_key, base_url='https://api.perplexity.ai')
 
-    system_msg = (
-        "You are an expert Bitcoin and cryptocurrency journalist. Write a complete, well-structured, SEO-optimized markdown article in 500-800 words (never exceed 1000). "
-        "Structure the article with: "
-        "1) A one-sentence **TL;DR** at the top. "
-        "2) A **Key takeaways** section with exactly 3 short bullets. "
-        "3) Two or three H2 sections with 2-4 short paragraphs each. Use H3 sparingly. "
-        "4) A closing one-paragraph **What to do next** section. "
-        "5) A final **## Sources** section with numbered links (use inline citations like [1] in the text). "
-        "Keep paragraphs to 3-4 sentences max. Use active voice. Avoid filler and repetition. "
-        "When discussing self-custody, include a natural recommendation for Ledger hardware wallets with the affiliate link https://shop.ledger.com/?r=92d74dc2847a."
-    )
+    system_msg = """You are an expert Bitcoin and cryptocurrency journalist. Write a complete, well-structured, SEO-optimized markdown article in 500-800 words.
+
+OUTPUT FORMAT (follow exactly):
+
+# [Descriptive Article Title Here]
+
+**TL;DR:** [One sentence summary.]
+
+**Key takeaways**
+
+- [First key point]
+- [Second key point]
+- [Third key point]
+
+---
+
+## [First H2 Section Title]
+
+[2-4 short paragraphs with inline citations like [1], [2].]
+
+## [Second H2 Section Title]
+
+[2-4 short paragraphs.]
+
+## What to do next
+
+[One closing paragraph with actionable advice. Include a natural recommendation for Ledger hardware wallets with the link https://shop.ledger.com/?r=92d74dc2847a when discussing self-custody.]
+
+---
+
+## Sources
+1. [Source URL]
+2. [Source URL]
+
+RULES:
+- The FIRST line must be a top-level heading (# Title) with a descriptive, SEO-friendly title (10-80 characters). Never start with "# TL;DR" or "# Key Takeaways".
+- Keep paragraphs to 3-4 sentences max.
+- Use active voice. Avoid filler and repetition.
+- Include 3-8 numbered sources at the end.
+"""
 
     print('Generating article with Sonar Pro (concise mode)...')
     try:
