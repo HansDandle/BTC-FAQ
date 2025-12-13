@@ -87,19 +87,31 @@ class CurrentEventsDataProvider {
 
   async getCurrentMarketSentiment() {
     // Generate current market sentiment based on price action
-    const priceData = await this.getBitcoinPrice();
-    const newsData = await getCryptoNews();
-    
-    let sentiment = 'neutral';
-    if (priceData.change24h > 3) sentiment = 'bullish';
-    else if (priceData.change24h < -3) sentiment = 'bearish';
-    
-    return {
-      sentiment,
-      fearGreedIndex: Math.floor(Math.random() * 100), // 0-100 scale
-      priceData,
-      newsData
-    };
+    try {
+      const priceData = await this.getBitcoinPrice();
+      const newsData = await this.getCryptoNews();
+
+      let sentiment = 'neutral';
+      if (typeof priceData?.change24h === 'number') {
+        if (priceData.change24h > 3) sentiment = 'bullish';
+        else if (priceData.change24h < -3) sentiment = 'bearish';
+      }
+
+      return {
+        sentiment,
+        fearGreedIndex: Math.floor(Math.random() * 100), // 0-100 scale
+        priceData,
+        newsData
+      };
+    } catch (err) {
+      console.error('Error building market sentiment:', err);
+      return {
+        sentiment: 'neutral',
+        fearGreedIndex: Math.floor(Math.random() * 100),
+        priceData: await this.getBitcoinPrice().catch(() => ({})),
+        newsData: []
+      };
+    }
   }
 }
 
