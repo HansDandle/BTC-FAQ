@@ -4,9 +4,15 @@ const path = require('path');
 
 class CurrentEventsDataProvider {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
+    // During DRY_RUN we avoid constructing the OpenAI client to prevent
+    // errors when API keys are intentionally unset.
+    if (!process.env.DRY_RUN) {
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY
+      });
+    } else {
+      this.openai = null;
+    }
     this.newsApiKey = process.env.NEWS_API_KEY;
     this.coinMarketCapKey = process.env.COINMARKETCAP_API_KEY;
   }
@@ -162,14 +168,32 @@ Make it feel like breaking news analysis that readers can't get anywhere else. F
   console.log('🤖 Generating current events blog post...');
 
   const preferred = [];
-  if (process.env.OPENAI_MODEL) preferred.push(process.env.OPENAI_MODEL);
-  // Default preference list: try high-quality models first, then fall back
-  preferred.push('gpt-4', 'gpt-4o', 'gpt-3.5-turbo');
+  if (process.env.OPENAI_MODEL) {
+    // If the caller explicitly requests a model, use only that model.
+    preferred.push(process.env.OPENAI_MODEL);
+  } else {
+    // Default preference list: prefer accessible, lower-cost models first.
+    // This avoids attempting `gpt-4` by default unless explicitly requested.
+    preferred.push('gpt-3.5-turbo', 'gpt-4o', 'gpt-4');
+  }
 
   let completion = null;
   let tried = [];
   // If PERPLEXITY_API_KEY is provided, prefer Perplexity as primary provider
   const perplexityKey = process.env.PERPLEXITY_API_KEY;
+  // If DRY_RUN is set, print decision info and exit without calling external APIs.
+  if (process.env.DRY_RUN) {
+    console.log('DRY_RUN enabled — not calling external APIs.');
+    console.log('Perplexity key present:', !!perplexityKey);
+    if (process.env.OPENAI_MODEL) {
+      console.log('OPENAI_MODEL override:', process.env.OPENAI_MODEL);
+      console.log('Would attempt only that model.');
+    } else {
+      console.log('Preferred OpenAI model order:', preferred.join(', '));
+    }
+    if (perplexityKey) console.log('Would attempt Perplexity as primary provider.');
+    process.exit(0);
+  }
   if (perplexityKey) {
     // Try Perplexity first
     try {
@@ -200,6 +224,11 @@ Make it feel like breaking news analysis that readers can't get anywhere else. F
   }
 
   for (const modelName of preferred) {
+    // If a provider already returned content (e.g. Perplexity), skip OpenAI attempts.
+    if (completion) {
+      console.log('Content already received from Perplexity; skipping OpenAI attempts.');
+      break;
+    }
     if (!modelName || tried.includes(modelName)) continue;
     tried.push(modelName);
     try {
