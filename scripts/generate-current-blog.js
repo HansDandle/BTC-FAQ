@@ -89,7 +89,7 @@ class CurrentEventsDataProvider {
     // Generate current market sentiment based on price action
     try {
       const priceData = await this.getBitcoinPrice();
-      const newsData = await this.getCryptoNews();
+      const newsData = (typeof this.getCryptoNews === 'function') ? await this.getCryptoNews() : [];
 
       let sentiment = 'neutral';
       if (typeof priceData?.change24h === 'number') {
