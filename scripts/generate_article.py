@@ -86,12 +86,15 @@ def main():
     client = OpenAI(api_key=api_key, base_url='https://api.perplexity.ai')
 
     system_msg = (
-        "You are an expert Bitcoin and cryptocurrency journalist with a libertarian bent. Produce a tight, concise, SEO-optimized markdown article. "
-        "Focus on one clear main message (at most two closely related points). Write for an informed audience. "
-        "Target ~800-1000 words. Start with a one-sentence TL;DR and a short 3-bullet Key takeaways section. "
-        "Use H2/H3 headings and brief paragraphs. Prefer active voice and avoid rambling or filler. "
-        "When citing facts, include inline numeric citations like [1], [2], and include a final '## Sources' section with numbered links. "
-        "Include a brief, natural recommendation for Ledger hardware wallets when discussing self-custody, using the link https://shop.ledger.com/?r=92d74dc2847a."
+        "You are an expert Bitcoin and cryptocurrency journalist. Write a complete, well-structured, SEO-optimized markdown article in 500-800 words (never exceed 1000). "
+        "Structure the article with: "
+        "1) A one-sentence **TL;DR** at the top. "
+        "2) A **Key takeaways** section with exactly 3 short bullets. "
+        "3) Two or three H2 sections with 2-4 short paragraphs each. Use H3 sparingly. "
+        "4) A closing one-paragraph **What to do next** section. "
+        "5) A final **## Sources** section with numbered links (use inline citations like [1] in the text). "
+        "Keep paragraphs to 3-4 sentences max. Use active voice. Avoid filler and repetition. "
+        "When discussing self-custody, include a natural recommendation for Ledger hardware wallets with the affiliate link https://shop.ledger.com/?r=92d74dc2847a."
     )
 
     print('Generating article with Sonar Pro (concise mode)...')
@@ -102,9 +105,9 @@ def main():
                 {'role': 'system', 'content': system_msg},
                 {'role': 'user', 'content': prompt}
             ],
-            # Reduce token budget to encourage concision; adjust as needed
-            max_tokens=1600,
-            temperature=0.45
+            # Token budget tuned for 500-800 word article (~1200 tokens)
+            max_tokens=1400,
+            temperature=0.5
         )
     except Exception as e:
         print('Generation failed:', e)
@@ -206,15 +209,6 @@ def main():
 
     # If the content begins with a top-level markdown title (copied from model), remove it
     content = re.sub(r'^\s*#\s*.+\r?\n', '', content, count=1)
-
-    # enforce max word count (1000 words) to avoid overly long rambling outputs
-    words = re.findall(r"\w+", content)
-    max_words = 1000
-    truncated = False
-    if len(words) > max_words:
-        truncated = True
-        # keep first max_words words and try to preserve some heading structure by joining
-        content = ' '.join(words[:max_words]) + '\n\n*Note: article truncated to meet 1000-word limit.*\n\n'
 
     # If content doesn't already include a Sources section, append one using extracted sources
     lower = content.lower() if isinstance(content, str) else ''
