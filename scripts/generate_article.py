@@ -38,7 +38,7 @@ def extract_tags(text, n=5):
     stopwords = set([
         'the','and','for','with','that','this','from','have','has','are','were','was','not','but','you','your',
         'they','their','about','will','can','its','than','into','also','more','such','which','when','what','how',
-        'been','being','over','other','some','may','should','could','our','we','us','it's','it's'
+        'been','being','over','other','some','may','should','could','our','we','us',"it's"
     ])
 
     filtered = [w for w in words if w not in stopwords]
