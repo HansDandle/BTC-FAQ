@@ -160,22 +160,51 @@ FORMAT:
 Make it feel like breaking news analysis that readers can't get anywhere else. Focus on what's happening RIGHT NOW in Bitcoin and crypto markets.`;
 
   console.log('🤖 Generating current events blog post...');
-  
-  const completion = await dataProvider.openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
-      {
-        role: "system",
-        content: "You are a leading Bitcoin market analyst and journalist known for timely, accurate market commentary and predictions. Your analysis is sought after by institutions and retail investors alike."
-      },
-      {
-        role: "user",
-        content: prompt
+
+  const preferred = [];
+  if (process.env.OPENAI_MODEL) preferred.push(process.env.OPENAI_MODEL);
+  // Default preference list: try high-quality models first, then fall back
+  preferred.push('gpt-4', 'gpt-4o', 'gpt-3.5-turbo');
+
+  let completion = null;
+  let tried = [];
+  for (const modelName of preferred) {
+    if (!modelName || tried.includes(modelName)) continue;
+    tried.push(modelName);
+    try {
+      console.log(`Attempting model: ${modelName}`);
+      completion = await dataProvider.openai.chat.completions.create({
+        model: modelName,
+        messages: [
+          {
+            role: "system",
+            content: "You are a leading Bitcoin market analyst and journalist known for timely, accurate market commentary and predictions. Your analysis is sought after by institutions and retail investors alike."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        max_tokens: 4000,
+        temperature: 0.7
+      });
+      break;
+    } catch (err) {
+      // If model not found or unavailable, try next model
+      const code = err?.error?.code || err?.code || null;
+      console.warn(`Model ${modelName} failed:`, err?.message || err);
+      if (code === 'model_not_found' || /model .* does not exist/i.test(err?.message || '')) {
+        console.warn(`Model ${modelName} unavailable, trying next fallback.`);
+        continue;
       }
-    ],
-    max_tokens: 4000,
-    temperature: 0.7
-  });
+      // For other errors, rethrow to surface in CI
+      throw err;
+    }
+  }
+
+  if (!completion) {
+    throw new Error('All OpenAI model attempts failed; check API key and model access.');
+  }
 
   const content = completion.choices[0].message.content;
   
