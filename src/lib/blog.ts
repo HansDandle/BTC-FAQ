@@ -29,10 +29,11 @@ export function getAllBlogPosts(): BlogPost[] {
         const fileContents = fs.readFileSync(fullPath, 'utf8');
         const { data, content } = matter(fileContents);
 
+        const firstParagraph = (content || '').split(/\n\n+/)[0].replace(/\n/g, ' ').trim();
         return {
           slug,
           title: data.title || 'Untitled',
-          description: data.description || '',
+          description: data.description || data.excerpt || (firstParagraph ? firstParagraph.slice(0, 300) : ''),
           date: data.date || new Date().toISOString(),
           author: data.author || 'BTC-FAQ Team',
           tags: data.tags || [],
@@ -58,10 +59,11 @@ export function getBlogPost(slug: string): BlogPost | null {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
+    const firstParagraph = (content || '').split(/\n\n+/)[0].replace(/\n/g, ' ').trim();
     return {
       slug,
       title: data.title || 'Untitled',
-      description: data.description || '',
+      description: data.description || data.excerpt || (firstParagraph ? firstParagraph.slice(0, 300) : ''),
       date: data.date || new Date().toISOString(),
       author: data.author || 'BTC-FAQ Team',
       tags: data.tags || [],
