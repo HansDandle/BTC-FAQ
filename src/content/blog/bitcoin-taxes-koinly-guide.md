@@ -6,7 +6,15 @@ author: "BTC-FAQ Team"
 tags: ["bitcoin", "taxes", "koinly", "cryptocurrency"]
 ---
 
-# How to Calculate Your Bitcoin Taxes with Koinly in 2024
+**TL;DR:** Koinly automatically calculates your Bitcoin taxes by importing transactions from 700+ exchanges and wallets, then generating tax reports for your country.
+
+**Key takeaways**
+
+- Bitcoin is treated as property in most countries—you owe capital gains tax when you sell at a profit.
+- Koinly supports the US, UK, Canada, Australia, Germany, and many more jurisdictions.
+- A free tier lets you view all transactions before paying for reports.
+
+---
 
 Tax season can be overwhelming for crypto users, but it doesn't have to be. With the right tools and knowledge, you can easily calculate your Bitcoin taxes and stay compliant with tax authorities.
 
